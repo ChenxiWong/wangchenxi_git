@@ -31,4 +31,6 @@ int main(int argc, char* argv[])
     }
     cout<<" Found "<<cnt
         <<" mem in both vector ！"<<endl;
+    int sum = accumulate(i_vec.begin(), i_vec.end(), 0);
+    cout<<"ivector first sum = "<<sum<<" "<<endl;
 }
