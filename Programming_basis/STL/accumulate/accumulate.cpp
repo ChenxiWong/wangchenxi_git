@@ -43,9 +43,15 @@ int main(int argc, char* argv[])
 
     cnt = count(i_vec_second.begin(), i_vec_second.end(), 22);
     cout<<"the num of 22 in i_vec_second is "<<cnt<<endl;
-    vector<int> i_vec_third(i_vec.begin(), i_vec.end());
 
+    //vector<int> i_vec_third(i_vec.begin(), i_vec.end());// 这个方法存在比较隐蔽的问题，谨慎使用。
+    vector<int> i_vec_third(i_vec);
     copy(i_vec.begin(), i_vec.end(), i_vec_third.begin()); // the usage of copy
+
+    vector<int> ivec_tmp;
+    replace_copy(i_vec_third.begin(), i_vec_second.end(),back_inserter(ivec_tmp), 0, 10);
+    replace(i_vec_third.begin(), i_vec_third.end(),0, 10);
+
     cnt = count(i_vec_third.begin(), i_vec_third.end(), 10);
     cout<<"the num of 10 in i_vec_second is "<<cnt<<endl;
 }
