@@ -1,0 +1,507 @@
+linux下PS1命令提示符设置 (2011-09-01 18:31:26)
+    转载
+    ▼
+    标签： linux ps1 命令提示符 it  分类： Linux
+    次文来自我的一片博文：
+    前些天安装了centos6.0。自己也尝试着使用命令行来提高自己，但是，苦于每次键入的命令都是一个黑乎乎的颜色，而且前面的什么设备名称啊、主机名称啊、 当前路径啊什么的，自己用起来就是感觉不爽的很！这不，消停不下的我，在这里研究了一番：讲自己的命令提示符弄得还慢漂亮滴！(呵呵，反正我觉得漂亮)。
+
+    好了，先来说说什么是PS1，PS1是linux里头的一个默认的环境变量，至于你的系统当中有那些环境变量，你可一使用命令“env”来查看   [#4#caopeng@cp ~]$env   ；其实这里PS1就是用来设置命令提示符的环境变量。
+    现在来看看PS1到底有那些配置，到底怎样配置？
+    PS1有那些配置，或者说PS1里头都能配置些命令提示符的什么东西：
+
+    \d ：代表日期，格式为weekday month date，例如："Mon Aug 1"
+    \H ：完整的主机名称。例如：我的机器名称为：fc4.linux，则这个名称就是fc4.linux
+    \h ：仅取主机的第一个名字，如上例，则为fc4，.linux则被省略
+    \t ：显示时间为24小时格式，如：HH：MM：SS
+    \T ：显示时间为12小时格式
+    \A ：显示时间为24小时格式：HH：MM
+    \u ：当前用户的账号名称
+    \v ：BASH的版本信息
+    \w ：完整的工作目录名称。家目录会以 ~代替
+    \W ：利用basename取得工作目录名称，所以只会列出最后一个目录
+    \# ：下达的第几个命令
+    \$ ：提示字符，如果是root时，提示符为：# ，普通用户则为：$
+
+
+    看明白了么？？呵呵，其实不明白也米有任何关系，只要你用的时候，查查就好了。不是到有米有发现一个问题?你刚才的命令不是可以有各种颜色么？怎么这里没有？呵呵，不要着急，下来就说说这个颜色的问题。我们可以通过设置PS1变量使得提示符变成彩色。在PS1中设置字符序列颜色的格式为：\[\e[F;Bm\]    其中“F”为字体颜色，编号30~37；“B”为背景色，编号40~47。 不过呢，能设置颜色，他就肯定能够取消设置，注意：这里的取消设置，和不设置是两吗事情！至于详细区别，当你读完了我的博文你就O了。呵呵。取消设置：\[\e[m\]
+    颜色表
+
+    前景   背景   颜色
+    　　30      40      黑色
+    　　31      41      红色
+    　　32      42      绿色
+    　　33      43      黄色
+    　　34      44      蓝色
+    　　35      45      紫红色
+    　　36      46      青蓝色
+    　　37      47      白色
+
+    没有人傻乎乎的设置为白色吧.....
+
+    代码      意义
+    0            OFF
+    1            高亮显示
+    4            underline            
+    7            反白显示
+    8            不可见
+
+    好了，现在将PS1都有那些配置都说名了，现在来看看，应该该怎么配。我就按照我的配置，来说明下，其他的跟我的都一样。
+
+    [\[\e[32m\]#\##\[\e[31m\]\u@\[\e[36m\]\h \w]\$\[\e[m\]
+
+    这是我的配置
+
+    现在来看\[\e[32m\]，注意：最前面的那个方括号不是用在这里的。这不就说名了要设置为绿色么，来看看我的命令提示符：[#4#caopeng@cp ~]$ 有绿色的吧。
+    然后#\##就是显示现在运行的是第几条命令了，看到了吧。我这里是第四条。
+    下来又是一个设置颜色的[\e[31m\]，是设置为红色吧，这不也有红色么。[#4#caopeng@cp ~]$。呵呵
+    下来就是\u@这是嘛意思？自己差表看去，然后不又是一个设在颜色的么（这里显示的不怎么好），
+    \h  \w 是什么意思？\h 是说：仅取主机的第一个名字，\w是说：显示完整的路径，但是不知到为什么家他显示～而不是绝对路径。
+    在下来不是一个   ]         么 。开头不有一个   [   么。这两个刚好搭配在一起的。
+    然后最的这个   \[\e[m\]   使用来关闭颜色设置的。要是你没有这个的话；那么，你的命令提示符，包括你通过命令提示符输出的东西都是和最后一次的颜色设置相同(除了一些有特殊意义的文件  )。
+
+
+    嘿嘿：我还留一手，你知道这个配置写到哪里么？？？
+    应该在用户的根目录下的 ".bashrc"   注意前面有个"."  表示是隐藏的。
+    在里头的最后一行加上：
+    PS1='[\[\e[32m\]#\##\[\e[31m\]\u@\[\e[36m\]\h \w]\$\[\e[m\]'
+    然后保存。然后 source  .bashrc  或者  ". .bashrc"  或者注销一下。
+    OK！到此为止设置成功！你可一尽情的享受了...
+
+
+
+
+
+
+
+
+
+
+
+
+
+    Linux
+
+    终端提示符
+
+    PS1
+
+    设置（颜色）
+
+
+
+    \d 
+
+    ：代表日期，格式为
+
+    weekday month date
+
+    ，例如：
+
+    "Mon Aug 1" 
+
+    \H 
+
+    ：完整的主机名称。例如：我的机器名称为：
+
+    fc4.linux
+
+    ，则这个名称就是
+
+    fc4.linux 
+
+    \h 
+
+    ：仅取主机的第一个名字，如上例，则为
+
+    fc4
+
+    ，
+
+    .linux
+
+    则被省略
+
+
+
+    \t 
+
+    ：显示时间为
+
+    24
+
+    小时格式，如：
+
+    HH
+
+    ：
+
+    MM
+
+    ：
+
+    SS 
+
+    \T 
+
+    ：显示时间为
+
+    12
+
+    小时格式
+
+
+
+    \A 
+
+    ：显示时间为
+
+    24
+
+    小时格式：
+
+    HH
+
+    ：
+
+    MM 
+
+    \u 
+
+    ：当前用户的账号名称
+
+
+
+    \v 
+
+    ：
+
+    BASH
+
+    的版本信息
+
+
+
+    \w 
+
+    ：完整的工作目录名称。家目录会以
+
+    ~
+
+    代替
+
+
+
+    \W 
+
+    ：利用
+
+    basename
+
+    取得工作目录名称，所以只会列出最后一个目录
+
+
+
+    \# 
+
+    ：下达的第几个命令
+
+
+
+    \$ 
+
+    ：提示字符，如果是
+
+    root
+
+    时，提示符为：
+
+# 
+
+    ，普通用户则为：
+
+    $ 
+
+    CentOS
+
+    中关于这些：
+
+
+
+\a     an ASCII bell character (07) 
+
+    \d     the date in "Weekday Month Date" format (e.g., "Tue May 
+
+            26") 
+
+    \D{format} 
+
+    the 
+
+    format 
+
+    is 
+
+    passed 
+
+    to 
+
+strftime(3) 
+
+    and 
+
+    the 
+
+    result 
+
+    is 
+
+    inserted 
+
+    into 
+
+    the 
+
+    prompt 
+
+    string; 
+
+    an 
+
+    empty 
+
+    format 
+
+    results 
+
+    in 
+
+    a 
+
+    locale-specific 
+
+    time 
+
+    representation. The braces are required 
+
+\e     an ASCII escape character (033) 
+
+    \h     
+
+    the hostname up to the first ‘.’
+
+
+
+    \H     the hostname 
+
+    \j     the number of jobs currently managed by the shell 
+
+    \l     
+
+    the basename of the shell’s terminal device name
+
+
+
+    \n     newline 
+
+    \r     carriage return 
+
+    \s     the name of the shell, the basename of $0 (the portion 
+
+            following the final slash) 
+
+    \t     the current time in 24-hour HH:MM:SS format 
+
+    \T     the current time in 12-hour HH:MM:SS format 
+
+    \@     the current time in 12-hour am/pm format 
+
+    \A     the current time in 24-hour HH:MM format 
+
+    \u     the username of the current user 
+
+\v     the version of bash (e.g., 2.00) 
+
+\V     the release of bash, version + patch level (e.g., 2.00.0) 
+
+    \w     the 
+
+    current 
+
+    working 
+
+    directory, 
+
+    with 
+
+    $HOME 
+
+    abbreviated 
+
+    with 
+
+    a 
+
+    tilde 
+
+    \W     the basename of the current working directory, with $HOME 
+
+    abbreviated with a tilde 
+
+    \!     the history number of this command 
+
+    \#     the command number of this command 
+
+    \$     if the effective UID is 0, a #, otherwise a $ 
+
+    \nnn   the character corresponding to the octal number nnn 
+
+    \\     a backslash 
+
+    \[     begin a sequence of non-printing characters, which could be used 
+
+    to embed a terminal control sequence into the prompt 
+
+    \]     end a sequence of non-printing characters
+
+
+
+
+
+
+
+    于是可以根据这些指定自己喜欢的命令提示符格式：
+
+
+
+    PS1="\u@\h:\w\$ "
+
+
+
+
+
+    但是这样设置之后显示的提示符是没有颜色的，
+
+    如果希望加入颜色设置，
+
+    可
+
+    以这样：
+
+
+
+    PS1="\e[1;32m\u\e[m\e[1;33m@\e[m\e[1;35m\h\e[m:\w\$ "
+
+
+
+
+
+    此时，在终端中的显示应该是彩色的提示符了，其中的
+
+    \e[1;xxm
+
+    和
+
+    \e[m
+
+    就
+
+    是改变终端字体颜色的部分，
+
+    前者是修改颜色，
+
+    后者是恢复到正常显示。
+
+    但是
+
+
+
+    这
+
+    时还会有问题，在提示符中输入第一行时，回车换行不正常，导致显示很混乱，
+
+    因此，除了这个修改之外，还需要将全部非打印字符用专用的
+
+    bash 
+
+    转义序列
+
+
+
+    "\[" 
+
+    和
+
+    "\]" 
+
+    括起来。
+
+    这两个序列通知
+
+    bash
+
+    ，
+
+    被括起来的字符
+
+    不占用行上的任
+
+    何空间
+
+    ，
+
+    这样就使自动换行能够继续正常工作。
+
+    最终版本如下
+
+    （可解决带颜色提
+
+    示符的不换行问题）：
+
+
+
+    PS1="
+
+    \[
+
+        \e[1;32m
+
+        \]
+
+        \u
+
+        \[
+
+            \e[m
+
+            \]\[
+
+                \e[1;33m
+
+                \]
+
+                @
+
+                \[
+
+                    \e[m
+
+                    \]\[
+
+                        \e[1;35m
+
+                        \]
+
+                        \h
+
+                        \[
+
+                            \e[m
+
+                            \
+
+                            ]
+
+                            :\w\$ "
+
+
+

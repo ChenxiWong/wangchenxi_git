@@ -1,0 +1,130 @@
+编译mediastreamer2/ffmpeg/linphone(x86平台)
+2014-03-13 14:06 693人阅读 评论(0) 收藏 举报
+分类：
+linphone（2）
+--------------------------在x86环境下编译mediastreamer2的步骤--------------------------------------
+1）编译OGG库 音频编解码   http://www.xiph.org/downloads/ 
+./configure --prefix=/usr  --disable-static 
+make 
+sudo make install
+2）编译SPEEX  音频编解码
+./configure --prefix=/usr --disable-static --enable-fixed-point --disable-float-api  --with-ogg=/usr
+make 
+sudo make install
+3）编译ORTP库   http://download.savannah.gnu.org/releases/linphone/ortp/sources/
+./configure --prefix=/usr --disable-static 
+make 
+sudo make install
+--------------------到此即可编译无视频支持mediastream-------------------------
+编译mediastream：
+./configure --prefix=/usr  --disable-static  --enable-macsnd=no --enable-video=no --enable-tests --disable-gsm PKG_CONFIG_PATH=/usr/lib/pkgconfig 
+make 
+sudo make install
+
+
+4) 编译sdl Simple DirectMedia Layer多媒体开发包 ：http://www.libsdl.org/
+./configure --prefix=/usr --enable-shared 
+make 
+sudo make install
+
+
+5) 编译lame MP3编码器 ：http://lame.sourceforge.net/download.php
+./configure --prefix=/usr --enable-shared 
+make 
+sudo make install
+
+
+6） 编译xvid MPEG-4视频编解码器：http://www.xvid.org/
+cd xvidcore/build/generic
+./configure --prefix=/usr  --enable-shared
+make; sudo make install
+
+
+7）编译yasm   NASM assembler x264需要用到的汇编编译器：http://yasm.tortall.net/http://download.chinaunix.net/download/0013000/12166.shtml
+./configure --prefix=/usr  --enable-shared
+make
+sudo make install
+
+
+8）编译x264 http://download.videolan.org/pub/videolan/x264/snapshots/
+./configure --prefix=/usr  --enable-shared
+make ; sudo make install
+
+
+9）编译apr    Apache可移植运行库，为上层的应用程序提供一个可以跨越多操作系统平台使用的底层支持接口库  http所需  http://apr.apache.org/download.cgi
+./configure --prefix=/usr  --enable-shared
+make ; sudo make install
+
+
+10）编译 apr_util   http://apr.apache.org/download.cgi
+./configure --prefix=/usr --with-apr=/usr --enable-shared
+make  ; sudo make install
+
+
+11）编译pcre  是一个Perl库，解决C语言中使用正则表达式的问题 ftp://ftp.csx.cam.ac.uk/pub/software/programming/pcre/
+./configure --prefix=/usr --with-apr=/usr --enable-shared
+make
+sudo make install
+
+
+12） 编译apache http  Web服务器端软件  http://www.apache.org http://mirror.bjtu.edu.cn/apache/httpd/
+./configure --with-apr=/usr --with-apr-util=/usr --with-pcre=/usr --enable-shared --prefix=/usr
+make
+sudo make install
+
+
+运行./http -k start 在浏览器输入http://192.168.1.XXX 测试是否安装成功，若成功则显示：It works!
+测试完后要关闭 ./http -k stop
+
+
+13) 编译 ffmpeg http://ffmpeg.org/download.html
+./configure --prefix=/usr --enable-shared --enable-libmp3lame --enable-shared --enable-libxvid --enable-gpl --enable-pthreads --enable-ffserver --enable-ffplay --enable-libx264 --enable-pthreads
+make
+sudo make install
+
+--------------------------------至此 ffmpeg编译完成----------------------------------------------------------------------
+14）编译 mediastream http://mirror.yongbok.net/nongnu/linphone/mediastreamer/ 
+./configure --prefix=/usr  --disable-static   --enable-video=yes --enable-tests --disable-gsm  --enable-ffmpeg --enable-sdl
+make
+sudo make install
+
+--------------------------如若要编linphone，需做如下步骤-------------------------
+
+
+15） 编译osip   libosip2-3.2.0.tar.gz（http://ftp.gnu.org/gnu/osip/）
+16) 编译 libeXosip2-3.3.0.tar.gz（http://ftp.twaren.net/Unix/NonGNU/exosip）
+
+
+17）编译linphone （http://www.linphone.org/index.php/eng/download）
+无视频
+./configure --prefix=/home/ub/MyInstallProgram --disable-video --with-osip=/home/ub/Mylib
+make
+sudo make install
+有视频
+root@ubuntu:/usr/src/linphone-3.5.2# ./configure --prefix=/home/ubuntu/myinstallprogram/ --enable-video --enable-alsa --with-osip=/usr --with-readline=/usr --with-ffmpeg=/usr --with-sdl=/usr
+make
+sudo make install
+
+-----------------------可能遇到的问题------------------------------------
+
+1、编译db
+cd ./db-4.5.20/build_unix
+../dist/configure --prefix=/usr/local/db-4.5.20
+make
+sudo make install
+
+
+
+
+2、
+error: Package requirements (gtk+-2.0 >= 2.18.0 gthread-2.0) were not met:
+:
+sudo apt-get install libperl-dev
+sudo apt-get install libgtk2.0-dev
+
+
+3、没装g++ ，sudo apt-get install g++
+error
+configure: error: C++ compiler cannot create executables
+configure: error: GNU gettext tools not found; required for intltool
+sudo apt-get install g++ 

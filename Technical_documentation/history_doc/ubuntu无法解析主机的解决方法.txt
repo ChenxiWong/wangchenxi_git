@@ -1,0 +1,10 @@
+ 最近在搭建一个平台，需要修改ubuntu主机的名称，修改了/etc/hostname文件之后，在执行sudo命令时，会提示sudo: unable to resolve host ，亦即无法解析主机。
+
+ 在网上搜了下，找到了解决方法：
+
+ 1. sudo gedit /etc/hosts
+ 找到如下行：
+ 127.0.1.1       XXX
+ 将其修改为：
+ 127.0.1.1       （你现在的主机名）
+ 注：可以使用全部替换

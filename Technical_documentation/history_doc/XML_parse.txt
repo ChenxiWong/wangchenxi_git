@@ -1,0 +1,306 @@
+c++中使用libxml2读取xml文件
+2008-09-19 09:05:19
+标签：C++ xml 休闲 职场 libxml2
+linux下，纯c++使用libxml2读取xml文件
+下载libxml2
+[url]ftp://ftp.xmlsoft.org/libxml2/libxml2-sources-2.7.1.tar.gz[/url]
+常规方法进行安装
+#tar xvzf libxml2-xxxx.tar.gz
+#./configure
+#make
+#make install
+
+把libxml2下的libxml拷贝一份到libxml2所在的目录
+#cp /usr/include/libxml2/libxml /usr/include/libxml
+这一步不是必需的，但是在笔者的机器上不这样做就不行，编译的时候想
+g++ a.cpp -llibxml2 -o a 这样指定一下发现parser.h但是发现parser.h里面
+定义的库全是include<libxml/parser.h>.而parser.h的实际位置是在<libxml2\
+        libxml/parser.h>,没办法了，但是这样拷贝一下就好了
+
+
+        现在要说一下xml文件了，笔者要读取了xml有两种格式，一种
+        <root>
+        <node1>aaaaa</node1>
+        <node2>bbbbb</node2>
+        </root>
+        一种
+        <root>
+        <node1 a="10">aaaaa</node1>
+        <node2 b="20">bbbbb</node2>
+        </root>
+
+        整理一下，本文要读取的d.xml为
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <root>
+        <node1 a="10">aaaaa</node1>
+        <node2 b="20">bbbbb</node2>
+        </root>
+        目的为取出其它的 b的值和node2的属性值
+
+        OK，开工
+#include <iostream>
+#include <libxml/parser.h>
+int main(int argc, char *argv[])
+{
+    xmlDocPtr doc;           //定义解析文档指针
+    xmlNodePtr curNode;      //定义结点指针(你需要它为了在各个结点间移动)
+    xmlChar *szKey;          //临时字符串变量
+    char szDocName[] = "d.xml";
+    using std::string;
+    using std::cout;
+    using std::endl;
+
+    doc = xmlReadFile(szDocName,"UTF-8",XML_PARSE_RECOVER); //解析文件
+    //检查解析文档是否成功，如果不成功，libxml将指一个注册的错误并停止。
+    //一个常见错误是不适当的编码。XML标准文档除了用UTF-8或UTF-16外还可用其它编码保存。
+    //如果文档是这样，libxml将自动地为你转换到UTF-8。更多关于XML编码信息包含在XML标准中.
+    if (NULL == doc)
+    {
+        //文档打开错误
+        return -1;
+    }
+    curNode = xmlDocGetRootElement(doc); //确定文档根元素
+    /*检查确认当前文档中包含内容*/
+    if (NULL == curNode)
+    {
+        //空得xml文件
+        xmlFreeDoc(doc);
+        return -2;
+    }
+    /*在这个例子中，我们需要确认文档是正确的类型。“root”是在这个示例中使用文档的根类型。*/
+    if (xmlStrcmp(curNode->name, BAD_CAST "root"))
+    {
+        //分析根元素失败
+        xmlFreeDoc(doc);
+        return -3;
+    }
+    curNode = curNode->xmlChildrenNode;
+    xmlNodePtr propNodePtr = curNode;
+    while(curNode != NULL)
+    {
+        //取出节点中的内容
+        if ((!xmlStrcmp(curNode->name, (const xmlChar *)"node2")))
+        {
+            szKey = xmlNodeGetContent(curNode);
+            cout << szKey << endl; //得到node2的值并输出
+            xmlFree(szKey);
+        }
+        //查找带有属性attribute的节点
+        if (xmlHasProp(curNode,BAD_CAST "b"))
+        {
+            propNodePtr = curNode;
+        }
+        curNode = curNode->next;
+    }
+    //查找属性
+    xmlAttrPtr attrPtr = propNodePtr->properties;
+    while (attrPtr != NULL)
+    {
+        if (!xmlStrcmp(attrPtr->name, BAD_CAST "b"))
+        {
+            xmlChar* szAttr = xmlGetProp(propNodePtr,BAD_CAST "b");
+            cout << szAttr << endl; //找到b的属性并输出
+            xmlFree(szAttr);
+        }
+        attrPtr = attrPtr->next;
+    }
+    xmlFreeDoc(doc);
+    return 0;
+}
+
+OK编译一下:
+g++ a.cpp -lxml2 -o a
+
+$./a
+bbbbb
+20
+成功得到所需要的值
+上面这段代码不知道在哪找得了，好不容易才找到的，改了以后可以适应自己的需求了，感谢网友
+
+
+linux c xml 读写
+标签： xmllinuxcattributes文档null
+2012-03-19 21:47 2059人阅读 评论(0) 收藏 举报
+分类：
+好文转载（7） 实用技巧（3）
+在网络上似乎找不到太多的资料。
+我觉得 http://www.xmlsoft.org/tutorial/index.html
+的教程不错。给大家介绍一下。。是英文，不过很简单。相信做编程的人不会看不懂。。
+给出国内的一资料，写得也很不错。（程序 我测试过了)
+使用简介
+数据类型：
+xmlChar  替代char,使用UTF-8编码的一字节字符串。如果你的数据使用其它编码，它必须被转换到UTF-8才能使用libxml的函数。
+XmlDoc 包含由解析文档建立的树结构，xmlDocPtr是指向这个结构的指针。
+xmlNodePtr and xmlNode 包含单一结点的结构
+xmlNodePtr是指向这个结构的指针，它被用于遍历文档树。
+
+优点：1.   安装、使用比较简单，容易入门；2.   支持的编码格式较多，能很好的解决中文问题(使用一个很简单的编码转换函数)；3.   支持Xpath解析（这点对于任意定位xml文档中的节点还是很有用的哦）；4.支持Well-formed 和valid验证，具体而言支持DTD验证，Schema验证功能正在完善中(目前多数解析器都还不完全支持shema验证功能)；5.   支持目前通用的Dom、Sax方式解析等等。
+不足：1.  指针太多，使用不当时就会出现错误，在Linux系统中表现为常见的段错误，同样管理不当易造成内存泄漏；2.个人认为内面有些函数的功能设计的不是很好（比如获取Xpath函数，它不获取节点属性，这样子有些情况会定位不准）。
+在学习libxml2中，最好的学习手册就是由官方开发者提供的开发手册就是libxml2-devel-2.6.19，rpm –q –d libxml2获得文档路径，就是它了。
+关于xml
+开始研究 LibXML2 库之前，让我们先来巩固一下 XML 的相关基础。XML 是一种基于文本的格式，它可用来创建能够通过各种语言和平台访问的结构化数据。它包括一系列类似 HTML 的标记，并以树型结构来对这些标记进行排列。
+例如，可参见清单 1 中介绍的简单文档。这是配置文件部分中研究的配置文件示例的简化版本。为了更清楚地显示 XML 的一般概念，所以对其进行了简化。
+
+清单 1. 一个简单的 XML 文件
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<files>
+
+<owner>root</owner>
+
+<action>delete</action>
+
+<age units="days">10</age>
+
+</files>
+
+
+清 单 1 中的第一行是 XML 声明，它告诉负责处理 XML 的应用程序，即解析器，将要处理的 XML 的版本。大部分的文件使用版本 1.0 编写，但也有少量的版本 1.1 的文件。它还定义了所使用的编码。大部分文件使用 UTF-8，但是，XML 设计用来集成各种语言中的数据，包括那些不使用英语字母的语言。
+接下来出现的是元素。一个元素以开始标记开始（如 <files>），并以结束标记结束（如 </files>），其中使用斜线 (/) 来区别于开始标记。
+元 素是Node的一种类型。XML 文档对象模型 (DOM) 定义了几种不同的Nodes类型，包括Elements（如files或者age）、Attributes（如units）和 Text（如root或者10）。元素可以具有子节点。例如，age 元素有一个子元素，即文本节点10。而 files 元素有七个子元素。其中三个很明显。它们分别是三个子元素：owner、action和age。其他四个分别是元素前后的空白文本符号。
+XML 解析器可以利用这种父子结构来遍历文档，甚至修改文档的结构或内容。LibXML2 是这样的解析器中的其中一种，并且文中的示例应用程序正是使用这种结构来实现该目的。对于各种不同的环境，有许多不同的解析器和库。LibXML2 是用于 UNIX 环境的解析器和库中最好的一种，并且经过扩展，它提供了对几种脚本语言的支持，如 Perl 和 Python。
+
+1 tree
+/*******************************************
+ * compile: gcc -I/usr/include/libxml2/ -lxml2 tree1.c
+ * usage: create a xml tree
+ *
+ *******************************************/
+#include <stdio.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+int main(int argc, char **argv)
+{
+    xmlDocPtr doc = NULL;       /* document pointer */
+    xmlNodePtr root_node = NULL, node = NULL, node1 = NULL; /* node pointers */
+
+    //Creates a new document, a node and set it as a root node
+    doc = xmlNewDoc(BAD_CAST "1.0");
+    root_node = xmlNewNode(NULL, BAD_CAST "root");
+    xmlDocSetRootElement(doc, root_node);
+
+    //creates a new node, which is "attached" as child node of root_node node.
+    xmlNewChild(root_node, NULL, BAD_CAST "node1",BAD_CAST "content of node1");
+
+    // xmlNewProp() creates attributes, which is "attached" to an node.
+    node=xmlNewChild(root_node, NULL, BAD_CAST "node3", BAD_CAST"node has attributes");
+    xmlNewProp(node, BAD_CAST "attribute", BAD_CAST "yes");
+    //Here goes another way to create nodes.
+    node = xmlNewNode(NULL, BAD_CAST "node4");
+    node1 = xmlNewText(BAD_CAST"other way to create content");
+    xmlAddChild(node, node1);
+    xmlAddChild(root_node, node);
+    //Dumping document to stdio or file
+    xmlSaveFormatFileEnc(argc > 1 ? argv[1] : "-", doc, "UTF-8", 1);
+    /*free the document */
+    xmlFreeDoc(doc);
+    xmlCleanupParser();
+    xmlMemoryDump();      //debug memory for regression tests
+
+    return(0);
+}
+生成的xml:
+[denny@localhost xml]$ gcc -I/usr/include/libxml2/ -lxml2 tree1.c
+[denny@localhost xml]$ ./a.out
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+<node1>content of node1</node1>
+<node3 attribute="yes">node has attributes</node3>
+<node4>other way to create content</node4>
+</root>
+
+执行序列：
+1 声明指针：文档指针(xmlDocPtr)，结点指针(xmlNodePtr)；
+2 生成文档doc：xmlNewDoc
+3 生成根结点root_node： xmlNewDocNode ，xmlNewNode
+4 文档与根结点捆绑： xmlDocSetRootElement
+5 结点操作
+1)创建子结点：xmlNewChild或xmlNewNode
+2)设置结点属性：xmlNewProp
+3)设置结点值：xmlNewText，xmlNewChild， xmlAddChild
+6 释放内存：xmlFreeDoc，xmlMemoryDump
+7 lib的载入退出: LIBXML_TEST_VERSION , xmlCleanupParser
+2 parse
+对于应用程序来说，读取 XML 文件的第一步是加载该数据并将其解析为一个Document对象。在此基础上，可以对 DOM 树进行遍历以获取特定的节点。
+/*******************************************
+ * compile: gcc -I/usr/include/libxml2/ -lxml2 tree1.c
+ * usage: tree2 filename_or_URL
+ *
+ *******************************************/
+#include <stdio.h>
+#include <libxml/parser.h>
+#include <libxml/tree.h>
+
+#ifdef LIBXML_TREE_ENABLED
+
+    static void
+print_element_names(xmlNode * a_node)
+{
+    xmlNode *cur_node = NULL;
+
+    for (cur_node = a_node; cur_node; cur_node = cur_node->next) {
+        if (cur_node->type == XML_ELEMENT_NODE) {
+            printf("node type: Element, name: %s\n", cur_node->name);
+        }
+        print_element_names(cur_node->children);
+    }
+}
+
+/**
+ * Simple example to parse a file called "file.xml",
+ * walk down the DOM, and print the name of the
+ * xml elements nodes.
+ */
+    int
+main(int argc, char **argv)
+{
+    xmlDoc *doc = NULL;
+    xmlNode *root_element = NULL;
+
+    if (argc != 2)
+        return(1);
+
+    //LIBXML_TEST_VERSION
+
+    /*parse the file and get the DOM */
+    doc = xmlReadFile(argv[1], NULL, 0);
+
+    if (doc == NULL) {
+        printf("error: could not parse file %s\n", argv[1]);
+    }
+
+    /*Get the root element node */
+    root_element = xmlDocGetRootElement(doc);
+
+    print_element_names(root_element);
+
+    /*free the document */
+    xmlFreeDoc(doc);
+
+    //xmlCleanupParser();
+
+    return 0;
+}
+#else
+int main(void) {
+    fprintf(stderr, "Tree support not compiled in\n");
+    exit(1);
+}
+#endif
+
+执行序列：
+1 声明指针：文档指针(xmlDocPtr)，结点指针(xmlNodePtr)；
+2 得到文档doc: xmlReadFile
+3 得到根结点root_node：xmlDocGetRootElement
+4 结点操作：
+  1)获得到结点值：xmlNodeGetContent(对应于xmlFree)
+  2)遍历：
+    指向下一个结点：xmlNodePtr ->children
+    结点值：xmlNodePtr->name,
+    结点内遍历：xmlNodePtr->next
+5 释放内存：xmlFreeDoc，xmlFree
+
+

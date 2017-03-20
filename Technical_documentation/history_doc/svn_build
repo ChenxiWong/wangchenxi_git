@@ -1,0 +1,140 @@
+首先检查操作系统上面是否安装了subversion,一般centos操作系统都默认安装了此软件,如果没有安装使用如下命令快速安装
+
+    查询是否安装  
+
+    rpm -qa subversion
+
+    如果没有使用
+
+    yum -y install  subversion
+Linux平台的SVN服务器的配置及搭建
+2
+
+配置svn并启动svn服务,可以使用svnserve --help查看启动帮助,其中箭头指出来的配置项比较常用
+
+      指定svn的数据存储路径
+
+      mkdir -p /application/svndata
+
+      指定svn的配置文件信息路径
+
+      mkdir -p /application/svnpasswd
+
+      启动svn服务
+
+       svnserve -d -r /application/svndata/
+Linux平台的SVN服务器的配置及搭建
+Linux平台的SVN服务器的配置及搭建
+Linux平台的SVN服务器的配置及搭建
+3
+
+检测svn服务是否正常启动,如果能看到下图所示则证明启动成功
+
+       第一通过进程检测
+
+        ps -ef | grep svn
+
+       第二通过端口3690检测
+
+       netstat -lntup | grep 3690
+
+       第三通过文件检测,需要root用户才可以执行
+
+       lsof -i :3690
+Linux平台的SVN服务器的配置及搭建
+4
+
+使用svnadmin建立svn项目版本库
+
+      查看创建项目版本库命令
+
+      svnadmin --help
+
+      svnadmin help create
+
+      创建sadoc版本库
+
+       svnadmin create /application/svndata/sadoc
+Linux平台的SVN服务器的配置及搭建
+Linux平台的SVN服务器的配置及搭建
+5
+
+配置sadoc版本可的权限
+
+     进入sadoc版本库配置目录,并备份配置文件
+
+    cd /application/svndata/sadoc/conf/
+
+    cp -p svnserve.conf svnserve.conf.default
+
+    进行详细配置
+
+     anon-access = none //禁止匿名访问
+
+     auth-access = write //认证后有读的权限
+
+     password-db = /application/svnpasswd/passwd //指定密码文件
+
+     authz-db = /appplication/svnpasswd/authz //指定权限认证文件
+Linux平台的SVN服务器的配置及搭建
+Linux平台的SVN服务器的配置及搭建
+Linux平台的SVN服务器的配置及搭建
+6
+
+复制passwd和authz文件到sadoc的svnpasswd目录并修改权限
+
+      执行如下命令完成操作
+
+      cp -p authz passwd /application/svnpasswd/
+
+      cd /application/svnpasswd/
+
+      ll
+
+      chmod 700 authz passwd
+
+      ll
+Linux平台的SVN服务器的配置及搭建
+7
+
+为Svn版本库创建用户并授权访问指定项目版本库
+
+      编辑passwd文件配置用户和密码
+
+      vi passwd 
+
+      xingmaogou = xingmaogou
+
+      xingyuan  = xingyuan
+
+      编辑authz文件配置读取权限
+
+       [<版本库>:/项目/目录]
+
+       @<用户组名> = <权限>
+
+       <用户名>  = <权限>
+Linux平台的SVN服务器的配置及搭建
+Linux平台的SVN服务器的配置及搭建
+8
+
+重新启动svn服务进行验证
+
+      杀死svn服务
+
+       pkill svnserve
+
+       启动svn
+
+       svnserve -d -r /application/svndata/
+
+       备注:修改passwd和authz文件不需要重启svn服务而修改svnserve.conf则需要
+
+       
+Linux平台的SVN服务器的配置及搭建
+9
+
+最后安装客户端进行sadoc的配置是否正确
+
+       svn --username=xingmaogou co svn://121.xxx.xxx.xx9/sadoc
+Linux平台的SVN服务器的配置及搭建

@@ -1,0 +1,57 @@
+
+load data
+CHARACTERSET "UTF8"
+infile "/dev/shm/IMS_LIST.txt"
+append into table IMS_LIST
+fields terminated by '|'
+trailing nullcols
+(
+ZD_NO,
+LINE_NO,
+CALL_IP,
+CALL_PORT,
+CALLED_IP,
+CALLED_PORT,
+PRTCL_TYPE,
+CALL_248_IP,
+CALLED_248_IP,
+CALL_TID,
+CALL_NO,
+CALL_ABROAD,
+CALLED_TID,
+CALLED_NO,
+CALLED_ABROAD,
+MEDIA_TYPE,
+MEDIA_ENCODE,
+CALL_FLAG,
+TDMC_EC,
+DIAL_STATE,
+OF_TIME,
+DAIL_TIME date "yyyy-mm-dd hh24:mi:ss",
+RING_TIME date "yyyy-mm-dd hh24:mi:ss",
+START_TIME date "yyyy-mm-dd hh24:mi:ss",
+END_TIME date "yyyy-mm-dd hh24:mi:ss",
+ON_TIME date "yyyy-mm-dd hh24:mi:ss",
+DUR_TIME ,
+ON_SIDE,
+VOICE_FILE_NAME char(4000),
+VOICE_FILE_SIZE,
+SW_RT_LABEL_OPC,
+SW_RT_LABEL_DPC,
+SW_RT_LABEL_SLS,
+SW_CIC_NO,
+CALL_FWDING_FLAG,
+CALL_FWDING_NO,
+CALL_FWDING_RSN,
+SW_CALLING_CAT,
+SW_CALLING_NI,
+SW_CALLING_SI,
+SIP_VIA,
+SW_ACC_NO,
+SW_ACC_COUNT,
+SW_CALL_IP,
+SW_CALL_MG_IP,
+SW_CALLED_IP,
+SW_CALLED_MG_IP,
+CREATED_TIME sysdate
+)

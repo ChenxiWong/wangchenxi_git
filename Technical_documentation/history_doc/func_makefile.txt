@@ -1,0 +1,54 @@
+1、makefile里的函数
+
+makefile里的函数使用，和取变量的值类似，是以一个‘$’开始，然后是一个括号里面是函数名和需要的参数列表，多个变量用逗号隔开，像这样
+
+return = $(functionname  arg1,arg2,arg3...)。
+
+可能这里的'$'更像是从某个地址取值类似的操作。
+
+
+
+2、 wildcard
+
+使用：SRC = $(wildcard *.c ./foo/*.c) 
+搜索当前目录及./foo/下所有以.c结尾的文件，生成一个以空格间隔的文件名列表，并赋值给SRC.当前目录文件只有文件名，子目录下的文件名包含路径信息，比如./foor/bar.c。
+
+
+3、notdir
+
+使用：SRC = $(notdir wildcard)
+
+去除所有的目录信息，SRC里的文件名列表将只有文件名。
+
+
+
+4、patsubst
+
+使用：OBJ = $(patsubst %.c %.o $(SRC)) 
+
+patsubst是patten substitude的缩写，匹配替代的意思。这句是在SRC中找到所有.c 结尾的文件，然后把所有的.c换成.o。
+
+
+
+5、$(findstring FIND,IN)
+
+函数名称：查找字符串函数—findstring。
+
+函数功能：搜索字串“IN”，查找“FIND”字串。
+
+返回值：如果在“IN”之中存在“FIND” ，则返回“FIND”，否则返回空。
+
+函数说明：字串“IN”之中可以包含空格、[Tab]。搜索需要是严格的文本匹配。
+
+示例：
+
+$(findstring a,a b c)
+
+$(findstring a,b c)
+
+第一个函数结果是字“a”；第二个值为空字符。
+
+
+
+
+

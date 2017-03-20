@@ -1,0 +1,52 @@
+Ubuntu 13.04 安装ns2.35
+[日期：2014-03-15]  来源：Linux社区  作者：Linux    [字体：大 中 小]
+
+Step1: 更新系统。在终端输入如下命令
+
+sudo app-get  update #更新源列表
+sudo app-get upgrade #更新已经安装的包
+sudo app-get dist-upgrade #更新软件，升级系统
+
+Step2:安装几个需要的包
+
+sudo apt-get install build-essential 
+sudo apt-get install tcl8.5 tcl8.5-dev tk8.5 tk8.5-dev  #for tcl and tk
+sudo apt-get install libxmu-dev libxmu-headers  #for nam
+
+Step3:下载安装包，并复制到需要安装的目录,在这里需要取得root权限才可以安装
+
+官网下载地址：http://www.isi.edu/nsnam/ns/，这里下载allinone
+
+tar xvfz ns-allinone-2.35.tar.gz
+cd ns-allinone-2.35
+./install #进行安装
+
+Step4:配置环境变量
+
+在当前用户目录下,编辑.bashrc文件
+
+vim .bashrc
+
+在文件末尾添加
+
+# add path for ns2
+export PATH="$PATH:/home/liushun/ns-allinone-2.35/bin:/home/安装文件夹名/ns-allinone-2.35/tcl8.5.10/unix:/home/安装文件夹名/ns-allinone-2.35/tk8.5.10/unix"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/home/安装文件夹名/ns-allinone-2.35/otcl-1.14:/home/安装文件夹名/ns-allinone-2.35/lib"
+export TCL_LIBRARY="$TCL_LIBRARY:/home/安装文件夹名/ns-allinone-2.35/tcl8.5.10/library"
+
+
+Step5:验证安装
+
+进入控制台，输入ns,这时会提示安装ns2,根据提示输入
+
+sudo apt-get install ns2
+
+再次输入ns,出现%,说明安装成功
+
+输入nam,报错，这时提示安装nam，根据提示输入
+
+sudo apt-get install nam
+
+如果以上命令失效，可先输入
+
+sudo apt-get update #进行更新
