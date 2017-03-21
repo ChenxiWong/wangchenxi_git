@@ -9,7 +9,7 @@
 accumulate:accumulate.o
 	g++ accumulate.o -o accumulate
 accumulate.o:accumulate.cpp
-	g++ -c accumulate.cpp
+	g++ -g -c accumulate.cpp
 .PHONY:clean
 clean:
 	rm -rf *.o accumulate
