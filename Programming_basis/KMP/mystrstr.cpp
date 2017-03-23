@@ -1,7 +1,7 @@
 // Last Update:2017-03-23 14:41:18
 /**
  * @file mystrstr.cpp
- * @brief 
+ * @brief Simple search algorithm
  * @author wangchenxi
  * @version 0.1.00
  * @date 2017-03-23
