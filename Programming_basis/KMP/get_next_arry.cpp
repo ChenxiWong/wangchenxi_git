@@ -30,18 +30,28 @@ void get_next_arry(int* arry, const int num, const char* str)
     }
 }
 
-const char*mystrstr(const char* p,int* arry,const char* pattern)
+const char*mystrstr(const char* p,int size,int* arry,const char* pattern)
 {
     int pos = 0;
     int tmp = 0;
-    const char* p_tmp = pattern + pos;
-    while(*(p + tmp) != 0)
+    int len = strlen(pattern);
+    const char* p_tmp = pattern;
+    while(*(p + tmp) != 0 )
     {
-        if(*(p + tmp) != *(p_tmp + tmp) && tmp != 0)
+        if(*(p + tmp) != *(p_tmp + tmp))
         {
-            p_tmp += *(arry + tmp);
-            tmp = 0;
-            continue;
+            if( tmp != 0 )
+            {
+                p_tmp += *(arry + tmp);
+                tmp = 0;
+                continue;
+            }else{
+                ++p_tmp;
+            }
+            if ((p_tmp + tmp) >= (pattern + len ))
+            {
+                return NULL;
+            }
         }
         ++ tmp;
     }
@@ -58,8 +68,11 @@ int main(int argc, char* argv[])
     //得到next[]   还有进一步优化的余地
     get_next_arry(arry, size, pattern);
     //怎么使用next[]??
-    const char* pos = mystrstr(pattern,  arry, argv[2]);
-    printf(" --%s .\n", pos);
+    const char* pos = mystrstr(pattern, size, arry, argv[2]);
+    if(pos != NULL)
+    {
+        printf(" %s .\n", pos);
+    }
     for(int i = 0; i < size; ++i)
     {
         printf(" %d ", arry[i]);
