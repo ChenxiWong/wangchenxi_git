@@ -13,10 +13,6 @@ using namespace std;
 
 void get_next_arry(int* arry, const int num, const char* str)
 {
-
-
-
-
     int j = 1;
     arry[j-1] = 0;
     ++j;
@@ -34,16 +30,41 @@ void get_next_arry(int* arry, const int num, const char* str)
     }
 }
 
+const char*mystrstr(const char* p,int* arry,const char* pattern)
+{
+    int pos = 0;
+    int tmp = 0;
+    const char* p_tmp = pattern + pos;
+    while(*(p + tmp) != 0)
+    {
+        if(*(p + tmp) != *(p_tmp + tmp) && tmp != 0)
+        {
+            p_tmp += *(arry + tmp);
+            tmp = 0;
+            continue;
+        }
+        ++ tmp;
+    }
+    if(*(p + tmp) == 0)return p_tmp;
+    return NULL;
+}
+
 int main(int argc, char* argv[])
 {
     const char* pattern = argv[1];
     int size = strlen(pattern);
     int* arry = new int[size];
     memset(arry, 0, size*sizeof(int));
+    //得到next[]   还有进一步优化的余地
     get_next_arry(arry, size, pattern);
+    //怎么使用next[]??
+    const char* pos = mystrstr(pattern,  arry, argv[2]);
+    printf(" --%s .\n", pos);
     for(int i = 0; i < size; ++i)
     {
         printf(" %d ", arry[i]);
     }
     printf(" \n ");
 }
+
+
