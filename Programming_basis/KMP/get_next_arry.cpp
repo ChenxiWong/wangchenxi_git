@@ -38,6 +38,10 @@ const char*mystrstr(const char* p,int size,int* arry,const char* pattern)
     const char* p_tmp = pattern;
     while(*(p + tmp) != 0 )
     {
+        if ((p_tmp + tmp) >= (pattern + len ))
+        {
+            return NULL;
+        }
         if(*(p + tmp) != *(p_tmp + tmp))
         {
             if( tmp != 0 )
@@ -45,12 +49,10 @@ const char*mystrstr(const char* p,int size,int* arry,const char* pattern)
                 p_tmp += *(arry + tmp);
                 tmp = 0;
                 continue;
-            }else{
-                ++p_tmp;
             }
-            if ((p_tmp + tmp) >= (pattern + len ))
+            else
             {
-                return NULL;
+                ++p_tmp;
             }
         }
         ++ tmp;
