@@ -8,12 +8,12 @@
  */
 #include <iostream>
 #include <unistd.h>
+#include "log_analysiser.h"
 
 int main(int argc , char* argv[])
 {
-    handle hl;
-    hl.str2argv("./a.out -a abc -b bcd -c cde -d def");
-    cout<<"-----------------"<<endl;
+    log_analysiser analysiser("./log_analysiser_config.xml");
+    analysiser.analysis();
 }
 
 

@@ -93,3 +93,21 @@ void handle::init_handle(string& tmp_str, map<string, string>* p_map)
     str2argv();
 }
 
+bool handle::get_value_from_map(string& str_value, string& str_key)
+{
+    map<string, string>::iterator iter = m_p_map->find(str_key);
+    if( iter != m_p_map->end())
+    {
+        str_value = iter->second;
+        return true;
+    }
+    return false;
+}
+
+bool handle::insert_kv_to_map(string& str_key, string& str_value)
+{
+    (*m_p_map)[str_key] = str_value;
+    return true;
+}
+
+

@@ -22,9 +22,22 @@ add_handle::virtual public handle
     public:
         add_handle();
         virtual ~add_handle(){}
+        bool handle_getopt();
         bool run(log_message*);
 };
 
+jscon_parse_handle::virtual public handle
+{
+    private:
+        string m_tmp_str;
+    protected:
+        bool get_value_from_jscon_str();
+    public:
+        jscon_parse_handle();
+        virtual ~jscon_parse_handle(){}
+        bool handle_getopt();
+        bool run(log_message*);
+};
 
 class produce_handle
 {
@@ -32,7 +45,7 @@ class produce_handle
         produce_handle();
     protected:
     public:
-        virtual produce_handle(){}
+        virtual~produce_handle(){}
         static produce_handle* get_instance()
         {
             static produce_handle static_produce_handle;

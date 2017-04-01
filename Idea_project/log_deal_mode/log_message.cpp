@@ -25,3 +25,28 @@ log_message::log_message(const bool tmp_b)
 {
     sign = tmp_b;
 }
+
+bool log_message::get_member_str(string& dst_str, string& which_str)
+{
+    if(which_str == "m_jscon_value")
+    {
+        dst_str = m_jscon_value;
+    }
+    else if(which_str == "m_host_name")
+    {
+        dst_str = m_host_name;
+    }
+    else if(which_str == "m_time_str")
+    {
+        dst_str = m_time_str;
+    }
+    else if(which_str == "m_ID")
+    {
+        dst_str = m_ID;
+    }
+    else
+    {
+        return false;
+    }
+    return true;
+}

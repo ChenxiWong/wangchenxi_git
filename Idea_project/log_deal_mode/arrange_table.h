@@ -13,9 +13,12 @@
 #include "log_message.h"
 #include "handle.h"
 #include "produce_handle.h"
+
+
 #include <list>
 #include <vector>
 #include <map>
+
 using std::list;
 using std::vector;
 using std::map;
@@ -26,11 +29,12 @@ class arrange_table
         list<log_message*> * m_p_msg_list;
         map<string, string> m_map;
         vector<handle*> m_vec;
+        void set_m_p_msg_list(list<log_message*>*);
     public:
         arrange_table();
         virtual ~arrange_table(){}
         bool init_arrange_table(xmlNodePtr&);
-        bool arrange();
+        bool arrange(list<log_message*>*);
 };
 
 

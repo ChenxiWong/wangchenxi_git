@@ -1,0 +1,13 @@
+<log_config>
+    <mysql>
+        <host></host>
+        <port></port>
+        <usrname></usrname>
+        <passwd></passwd>
+        <space_time></space_time>
+        <pieces_of_data></pieces_of_data>
+    </mysql>
+    <table>
+        <handle argv="filter -a abc -b bcd -c cde -d def">functionName</handle>
+    </table>
+</log_config>
