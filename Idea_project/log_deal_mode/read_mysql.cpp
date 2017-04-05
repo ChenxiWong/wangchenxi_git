@@ -7,8 +7,12 @@
  * @date 2017-02-08
  */
 #include "read_mysql.h"
-#include "msg_base_analysis_log.h"
-#include "xml_parse.h"
+#include "log_message.h"
+
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/xmlsave.h>
+
 extern "C"{
 #include <stdlib.h>
 #include <stdio.h>
@@ -16,23 +20,44 @@ extern "C"{
 }
 
 
-read_mysql::read_mysql(string& mysql_config_path)
+read_mysql::read_mysql(xmlNodePtr curNode)
 {
 
-    xml_parse xml;
-    xml.set_file_path(mysql_config_path.c_str());
-    m_space_time = atoi(xml.get_value("/config/tmp_mysql/space_time"));
-    m_port = atoi(xml.get_value("/config/tmp_mysql/port"));
-
-
-    m_host = xml.get_value("/config/tmp_mysql/host");
-    m_db_name = xml.get_value("/config/tmp_mysql/db_name");
-    m_table_name = xml.get_value("/config/tmp_mysql/table_name");
-    m_user_name = xml.get_value("/config/tmp_mysql/user_name");
-    m_passwd = xml.get_value("/config/tmp_mysql/passwd");
-    m_plan_to_get_num_once = atoi(xml.get_value("/config/tmp_mysql/plan_to_get_num_once"));
+    curNode = curNode->xmlChildrenNode;
+    while(curNode != NULL)
+    {
+        if( 0 == xmlStrcmp(curNode->name, BAD_CAST("space_time")))
+        {
+            m_space_time =atoi((char*)xmlNodeGetContent(curNode));
+        }else if( 0 == xmlStrcmp(curNode->name, BAD_CAST("port")))
+        {
+            m_port =atoi((char*)xmlNodeGetContent(curNode));
+        }else if( 0 == xmlStrcmp(curNode->name, BAD_CAST("host")))
+        {
+            m_host =(char*)xmlNodeGetContent(curNode);
+        }else if( 0 == xmlStrcmp(curNode->name, BAD_CAST("db_name")))
+        {
+            m_db_name =(char*)xmlNodeGetContent(curNode);
+        }else if( 0 == xmlStrcmp(curNode->name, BAD_CAST("table_name")))
+        {
+            m_table_name =(char*)xmlNodeGetContent(curNode);
+        }else if( 0 == xmlStrcmp(curNode->name, BAD_CAST("user_name")))
+        {
+            m_user_name =(char*)xmlNodeGetContent(curNode);
+        }else if( 0 == xmlStrcmp(curNode->name, BAD_CAST("passwd")))
+        {
+            m_passwd =(char*)xmlNodeGetContent(curNode);
+        }else if( 0 == xmlStrcmp(curNode->name, BAD_CAST("plan_to_get_num_once")))
+        {
+            m_plan_to_get_num_once =atoi((char*)xmlNodeGetContent(curNode));
+        }else
+        {
+        }
+        curNode = curNode->next;
+    }
     m_mysql = new c_mysql(m_host, m_port, m_db_name, m_user_name, m_passwd);
 }
+
 read_mysql::~read_mysql()
 {
     if(m_mysql != NULL)
@@ -91,8 +116,8 @@ bool read_mysql::ensure_get_num_infact()
 void fill_read_mysql_list(MYSQL_ROW& row, void* data)
 {
     read_mysql* p_read_mysql = (read_mysql*) data;
-    log_msg_base* p_tmp_log_msg_base = new log_msg_base((char*)row[0], (char*) row[1], (char*) row[2], (char*)row[3]);
-    p_read_mysql->first_stemp_result.push_back(p_tmp_log_msg_base);
+    log_message* p_tmp_log_message = new log_message((char*)row[0], (char*) row[1], (char*) row[2], (char*)row[3]);
+    p_read_mysql->first_stemp_result.push_back(p_tmp_log_message);
 }
 
 bool read_mysql::first_stemp_work()
@@ -112,3 +137,4 @@ bool read_mysql::first_stemp_work()
     }
     return false;
 }
+

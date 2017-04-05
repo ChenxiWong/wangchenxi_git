@@ -22,7 +22,7 @@ class log_message
         string m_ID;
         bool sign;
     public:
-        log_message(){}
+        log_message();
         virtual ~log_message()
         {
         }

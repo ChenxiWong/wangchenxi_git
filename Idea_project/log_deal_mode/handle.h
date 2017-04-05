@@ -19,12 +19,14 @@ using std::string;
 class handle
 {
     private:
+    protected:
         void set_m_arg_str(string&);
         void set_m_p_map(map<string, string>*);
         void str2argv();
         string m_arg_str;
         map<string, string>* m_p_map;
-    protected:
+
+
         int m_argc;
         char** m_argv;
         char* m_p_c;
@@ -51,8 +53,8 @@ class handle
         bool insert_kv_to_map(string&, string&);
     public:
         handle();
-        handle(handle& p_handle);
-        handle& operator= (handle& p_handle);
+        handle(const handle& p_handle);
+        handle& operator= (const handle& p_handle);
         void init_handle(string& , map<string, string>*);
         virtual ~handle()
         {

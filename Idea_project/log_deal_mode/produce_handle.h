@@ -15,7 +15,7 @@
 #include <string>
 using std::string;
 
-add_handle::virtual public handle
+class add_handle:virtual public handle
 {
     private:
     protected:
@@ -26,12 +26,11 @@ add_handle::virtual public handle
         bool run(log_message*);
 };
 
-jscon_parse_handle::virtual public handle
+class jscon_parse_handle:virtual public handle
 {
     private:
-        string m_tmp_str;
     protected:
-        bool get_value_from_jscon_str();
+        bool get_value_from_jscon_str(string&, string&);
     public:
         jscon_parse_handle();
         virtual ~jscon_parse_handle(){}

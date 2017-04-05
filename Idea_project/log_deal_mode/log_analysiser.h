@@ -22,7 +22,7 @@ class log_analysiser
         list<arrange_table*> m_table_list;
         read_mysql* m_p_read_mysql;
         int m_thread_num;
-        bool one_arrange_table(list<log_message*>*);
+        bool one_arrange_table(list<log_message*>*, arrange_table*);
         string m_xml_path;
         void xml_parse();
     protected:

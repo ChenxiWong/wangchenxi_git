@@ -37,8 +37,8 @@ void log_analysiser::xml_parse()
             }else if(0 == xmlStrcmp(curNode->name, BAD_CAST("table")))
             {
                 arrange_table* p_table = new arrange_table();
-                p_arrange->init_arrange_table(curNode);//需要去实现
-                m_table_list.push_bak(p_table);
+                p_table->init_arrange_table(curNode);//需要去实现
+                m_table_list.push_back(p_table);
             }
         }
     }
@@ -68,7 +68,7 @@ log_analysiser& log_analysiser::operator= (log_analysiser& tmp)
 bool log_analysiser::one_arrange_table(list<log_message*>* p_list, arrange_table* p_arrange)
 {
     ++m_thread_num;
-    p_arrange->arrange_table(p_list);
+    p_arrange->arrange(p_list);
     --m_thread_num;
 }
 
@@ -77,11 +77,11 @@ void* log_analysiser::analysis()
     while(1)
     {
         m_p_read_mysql->first_stemp_work();
-        if(m_p_read_mysql->first_stemp_result->size() > 0)
+        if(m_p_read_mysql->first_stemp_result.size() > 0)
         {
             for(list<arrange_table*>::iterator iter = m_table_list.begin(); iter != m_table_list.end(); ++iter)
             {
-                one_arrange_table(m_p_read_mysql->first_stemp_result, *iter); // 可以使用多线程
+                one_arrange_table(&(m_p_read_mysql->first_stemp_result), *iter); // 可以使用多线程
             }
         }else{
             sleep(m_p_read_mysql->m_space_time);

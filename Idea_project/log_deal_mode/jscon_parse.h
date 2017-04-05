@@ -10,17 +10,14 @@
 #ifndef JSCON_PARSE_H
 #define JSCON_PARSE_H
 
+#include "commit_tools.h"
+
+
 #include <string>
 #include "json/json.h"
 
 using std::string;
 
-#ifndef DNUMTOSTR
-#define DNUMTOSTR(n,s) \
-{ std::stringstream ss; \
-        ss<<n; \
-        s+=std::string(ss.str()) ;\
-#endif
 
 
 

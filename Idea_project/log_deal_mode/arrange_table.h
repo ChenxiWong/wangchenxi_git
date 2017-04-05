@@ -14,6 +14,9 @@
 #include "handle.h"
 #include "produce_handle.h"
 
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/xmlsave.h>
 
 #include <list>
 #include <vector>
@@ -33,7 +36,7 @@ class arrange_table
     public:
         arrange_table();
         virtual ~arrange_table(){}
-        bool init_arrange_table(xmlNodePtr&);
+        bool init_arrange_table(xmlNodePtr);
         bool arrange(list<log_message*>*);
 };
 

@@ -246,9 +246,3 @@ string  c_mysql :: update_setstring(bool & b_begin , string clud_name  ,string v
     }
     return sql ; 
 }
-
-
-
-int main(void)
-{
-}

@@ -19,7 +19,7 @@ handle::handle()
     m_argv = NULL;
     m_p_c = NULL;
 }
-handle::handle(handle& p_handle)
+handle::handle(const handle& p_handle)
 {
     m_argc = p_handle.m_argc;
     m_argv = new char*[m_argc];
@@ -30,9 +30,9 @@ handle::handle(handle& p_handle)
     memcpy( m_p_c, p_handle.m_p_c, p_handle.m_arg_str.size());
     m_arg_str = p_handle.m_arg_str;
     m_p_map = p_handle.m_p_map;
-    p_log_message = p_handle->p_log_message;
+    p_log_message = p_handle.p_log_message;
 }
-handle& handle::operator= (handle& p_handle)
+handle& handle::operator= (const handle& p_handle)
 {
     m_argc = p_handle.m_argc;
     m_argv = new char*[m_argc];
@@ -43,7 +43,7 @@ handle& handle::operator= (handle& p_handle)
     memcpy( m_p_c, p_handle.m_p_c, p_handle.m_arg_str.size());
     m_arg_str = p_handle.m_arg_str;
     m_p_map = p_handle.m_p_map;
-    p_log_message = p_handle->p_log_message;
+    p_log_message = p_handle.p_log_message;
     return *this;
 }
 void handle::str2argv()

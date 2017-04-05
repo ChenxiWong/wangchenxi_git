@@ -36,10 +36,10 @@ bool arrange_table::arrange(list<log_message*>* p_list)
     //handle::run();
 }
 
-bool arrange_table::init_arrange_table(xmlNodePtr& node)
+bool arrange_table::init_arrange_table(xmlNodePtr node)
 {
     xmlNodePtr curNode;
-    curNode = curNode->xmlChildrenNode;
+    curNode = node->xmlChildrenNode;
     string str_content("");
     for(; curNode != NULL; curNode = curNode->next)
     {

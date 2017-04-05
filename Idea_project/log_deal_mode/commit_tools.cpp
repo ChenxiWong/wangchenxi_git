@@ -1140,12 +1140,12 @@ int code_convert(char *from_charset, char *to_charset, char *inbuf, size_t inlen
 
 int u2g(char *inbuf, size_t inlen, char *outbuf, size_t outlen)
 {
-    return code_convert("utf-8", "gb2312", inbuf, inlen, outbuf, outlen);
+    return code_convert((char*)"utf-8", (char*)"gb2312", inbuf, inlen, outbuf, outlen);
 }
 
 int g2u(char *inbuf, size_t inlen, char *outbuf, size_t outlen)
 {
-    return code_convert("gb2312", "utf-8", inbuf, inlen, outbuf, outlen);
+    return code_convert((char*)"gb2312", (char*)"utf-8", inbuf, inlen, outbuf, outlen);
 }
 
 int unicode_to_utf8_1(uint32_t unic, unsigned char* pOutput, int outSize){
@@ -1256,7 +1256,7 @@ bool find_flag(string& answer_str,string& flag)
         pos = strstr( c_tmp, flagv[i]);
         if( pos != NULL)
         {
-            char* hex_char = "0123456789abcdefABCDEF";
+            char* hex_char =(char*) "0123456789abcdefABCDEF";
             for(i = 1;i < 5; ++i)
             {
                 c_tmp = strchr(hex_char, *(pos + i ));

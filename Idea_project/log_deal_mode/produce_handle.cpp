@@ -11,6 +11,7 @@
 #include "handle.h"
 #include "json/json.h"
 #include "jscon_parse.h"
+#include "produce_handle.h"
 
 add_handle::add_handle()
 {
@@ -44,6 +45,43 @@ jscon_parse_handle::jscon_parse_handle()
 
 bool jscon_parse_handle::handle_getopt()
 {
+    int ch;
+    opterr = 0;
+    while ((ch = getopt( m_argc, m_argv, "g:f:t:a:"))!=-1)
+    {
+        switch(ch)
+        {
+            case 'g':
+                {
+                    m_b_g = true;
+                    m_str_g = optarg;
+                    break;
+                }
+            case 'f':
+                {
+                    m_b_f = true;
+                    m_str_f = optarg;
+                    break;
+                }
+            case 't':
+                {
+                    m_b_t = true;
+                    m_str_t = optarg;
+                    break;
+                }
+            case 'a':
+                {
+                    m_b_a = true;
+                    m_str_a = optarg;
+                    break;
+                }
+            default:
+                {
+                    PrintForDebug("undefined optargs occured!\n");
+                    break;
+                }
+        }
+    }
 }
 
 bool jscon_parse_handle::run(log_message* p_msg)
@@ -58,7 +96,7 @@ bool jscon_parse_handle::run(log_message* p_msg)
         PrintForDebug("get value from jscon_str faile");
         return false;
     }
-    if(!(m_b_t && insert_kv_to_map( m_str_t, m_str_a_str)))
+    if(!(m_b_t && insert_kv_to_map( m_str_t, m_str_a_dst)))
     {
         PrintForDebug("insert value to map faile");
         return false;
