@@ -17,9 +17,9 @@ log_message::log_message(){}
 
 bool log_message::get_member_str(string& dst_str, string& which_str)
 {
-    if(which_str == "m_jscon_value")
+    if(which_str == "m_message_str")
     {
-        dst_str = m_jscon_value;
+        dst_str = m_message_str;
     }
     else if(which_str == "m_host_name")
     {

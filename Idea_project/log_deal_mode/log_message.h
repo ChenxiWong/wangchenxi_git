@@ -16,7 +16,7 @@ using std::string;
 class log_message
 {
     private:
-        string m_jscon_value;
+        string m_message_str;
         string m_host_name;
         string m_time_str;
         string m_ID;
@@ -26,9 +26,9 @@ class log_message
         virtual ~log_message()
         {
         }
-        log_message(char* c_ID, char* c_time_str, char* c_host_name,char* c_jscon_value ):m_jscon_value(c_jscon_value),m_host_name(c_host_name),m_time_str(c_time_str),m_ID(c_ID){
-            replace_all(m_jscon_value, "#012", "");
-            replace_all(m_jscon_value, " ", "");
+        log_message(char* c_ID, char* c_time_str, char* c_host_name,char* c_jscon_value ):m_message_str(c_jscon_value),m_host_name(c_host_name),m_time_str(c_time_str),m_ID(c_ID){
+            replace_all(m_message_str, "#012", "");
+            replace_all(m_message_str, " ", "");
             sign = true;
         }
         log_message(const bool tmp_b):sign(tmp_b){}

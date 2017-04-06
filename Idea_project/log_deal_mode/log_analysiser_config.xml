@@ -10,19 +10,19 @@
         <plan_to_get_num_once>6553500</plan_to_get_num_once>
     </mysql>
     <table>
-        <handle argv="filter -g m_jscon_value -a NPR_FlowState_Syslog -t filter_m_jscon_value">strstr_filter</handle>
-        <handle argv="parse -f filter_m_jscon_value -a NPR_FlowState_Syslog/ID  -t ID">jscon_parse</handle>
-        <handle argv="filter -f ID -a 0 ">eq_filter</handle>
-        <handle argv="filter -g m_jscon_value -a NPR_FlowState_Syslog -t filter_m_jscon_value">filter</handle>
-        <handle argv="parse -f filter_m_jscon_value -a NPR_FlowState_Syslog/State_of_total_flow/data_size  -t data_size">jscon_parse</handle>
-        <handle argv="parse -f filter_m_jscon_value -a NPR_FlowState_Syslog/State_of_total_flow/packet_num -t packet_num">jscon_parse</handle>
-        <handle argv="get -g m_time_str -t time">get</handle>
-        <handle argv="arrange -f time -a 300 -t time">arrange_time</handle>
-        <handle argv="put -a all_ip -t ip">put</handle>
-        <handle argv="put -a all_port -t port">put</handle>
-        <handle argv="put -a all_direction -t direction">put</handle>
-        <handle argv="write -v 6 -0 time -1 ip -2 direction -3 port -4 packet_num -5 data_size -d |">write_cache</handle>
-        <handle argv="write -s 1 -o /dev/shm/State_of_total_flow.txt">write_file</handle>
+        <handle argv="filter -g m_message_str -i NPR_FlowState_Syslog -t filter_m_message_str ">strstr_filter</handle>
+        <handle argv="parse -f filter_m_message_str -a NPR_FlowState_Syslog/ID  -t ID ">jscon_parse</handle>
+        <handle argv="filter -f ID -e 0 ">eq_filter</handle>
+        <handle argv="filter -g m_message_str -a NPR_FlowState_Syslog -t filter_m_message_str ">filter</handle>
+        <handle argv="parse -f filter_m_message_str -a NPR_FlowState_Syslog/State_of_total_flow/data_size  -t data_size ">jscon_parse</handle>
+        <handle argv="parse -f filter_m_message_str -a NPR_FlowState_Syslog/State_of_total_flow/packet_num -t packet_num ">jscon_parse</handle>
+        <handle argv="get -g m_time_str -t time ">get</handle>
+        <handle argv="time -f time -a 300 -t time ">time</handle>
+        <handle argv="put -a all_ip -t ip ">put</handle>
+        <handle argv="put -a all_port -t port ">put</handle>
+        <handle argv="put -a all_direction -t direction ">put</handle>
+        <handle argv="write -v 6 -M time|ip|direction|port|packet_num|data_size| -d | ">write_cache</handle>
+        <handle argv="write -s 1 -o /dev/shm/State_of_total_flow.txt ">write_file</handle>
         <handle argv="oracle -i /dev/shm/State_of_total_flow.txt -u test -p oracle -b orcl_db ">oracle_output</handle>
     </table>
 </log_config>

@@ -1,0 +1,9 @@
+<config>
+    <send_data_type> <!--hello-->
+        <test>net</test>
+    </send_data_type>
+    <time_out wangchenxi="hello,world">60</time_out>
+    <max_time>1</max_time>
+    <max_row>10000</max_row>
+</config>
+

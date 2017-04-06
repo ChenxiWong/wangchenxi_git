@@ -31,9 +31,172 @@ class jscon_parse_handle:virtual public handle
     private:
     protected:
         bool get_value_from_jscon_str(string&, string&);
+
+        bool m_b_g;
+        string m_str_g;
+
+        bool m_b_f;
+        string m_str_f;
+
+        bool m_b_t;
+        string m_str_t;
+
+        bool m_b_a;
+        string m_str_a;
+
     public:
         jscon_parse_handle();
         virtual ~jscon_parse_handle(){}
+        bool handle_getopt();
+        bool run(log_message*);
+};
+
+class get_handle:virtual public handle
+{
+    private:
+    protected:
+
+        bool m_b_g;
+        string m_str_g;
+
+        bool m_b_t;
+        string m_str_t;
+
+    public:
+        get_handle();
+        virtual ~get_handle(){}
+        bool handle_getopt();
+        bool run(log_message*);
+};
+
+class filter_handle:virtual public handle
+{
+    private:
+    protected:
+
+        bool m_b_f;
+        string m_str_f;
+
+        bool m_b_i;
+        string m_str_i;
+
+        bool m_b_e;
+        string m_str_e;
+
+    public:
+        filter_handle();
+        virtual ~filter_handle(){}
+        bool handle_getopt();
+        bool run(log_message*);
+};
+
+class put_handle:virtual public handle
+{
+    private:
+    protected:
+
+        bool m_b_t;
+        string m_str_t;
+
+        bool m_b_a;
+        string m_str_a;
+
+    public:
+        put_handle();
+        virtual ~put_handle(){}
+        bool handle_getopt();
+        bool run(log_message*);
+};
+
+class time_handle:virtual public handle
+{
+    private:
+    protected:
+
+        bool m_b_f;
+        string m_str_f;
+
+        bool m_b_t;
+        string m_str_t;
+
+        bool m_b_a;
+        string m_str_a;
+
+        bool modulo_operation_of_time(string&, string&);
+    public:
+        time_handle();
+        virtual ~time_handle(){}
+        bool handle_getopt();
+        bool run(log_message*);
+};
+
+class write_cache_handle:virtual public handle
+{
+    private:
+    protected:
+
+        vector<string> m_vec;
+
+        bool m_b_v;
+        string m_str_v;
+        int m_int_v;
+
+        bool m_b_M;
+        string m_str_M;
+
+        bool m_b_d;
+        string m_str_d;
+    public:
+        write_cache_handle();
+        virtual ~write_cache_handle(){}
+        bool handle_getopt();
+        bool run(log_message*);
+};
+
+class write_file_handle:virtual public handle
+{
+    private:
+    protected:
+
+        unsigned long long m_count;
+
+        bool m_b_s;
+        string m_str_s;
+        int m_int_s;
+
+        bool m_b_o;
+        string m_str_o;
+
+    public:
+        write_file_handle();
+        virtual ~write_file_handle(){}
+        bool handle_getopt();
+        bool run(log_message*);
+};
+
+class oracle_output_handle:virtual public handle
+{
+    private:
+    protected:
+
+        bool m_b_c;
+        string m_str_c;
+
+        bool m_b_b;
+        string m_str_b;
+
+        bool m_b_p;
+        string m_str_p;
+
+        bool m_b_u;
+        string m_str_u;
+
+        bool m_b_i;
+        string m_str_i;
+
+    public:
+        oracle_output_handle();
+        virtual ~oracle_output_handle(){}
         bool handle_getopt();
         bool run(log_message*);
 };

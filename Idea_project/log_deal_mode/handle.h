@@ -31,22 +31,9 @@ class handle
         char** m_argv;
         char* m_p_c;
 
-        bool m_b_g;
-        string m_str_g;
-        string m_str_g_dst;
+        string m_tmp_str;
 
-        bool m_b_f;
-        string m_str_f;
-        string m_str_f_dst;
-
-        bool m_b_t;
-        string m_str_t;
-        string m_str_t_dst;
-
-        bool m_b_a;
-        string m_str_a;
-        string m_str_a_dst;
-
+        string m_cache_str;
 
         log_message* p_log_message;
         bool get_value_from_map(string&, string&);
