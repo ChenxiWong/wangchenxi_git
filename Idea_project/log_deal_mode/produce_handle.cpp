@@ -175,7 +175,7 @@ bool filter_handle::handle_getopt()
 {
     int ch;
     opterr = 0;
-    while ((ch = getopt( m_argc, m_argv, "f:i:e:t:"))!=-1)
+    while ((ch = getopt( m_argc, m_argv, "f:i:e:"))!=-1)
     {
         switch(ch)
         {
@@ -574,13 +574,42 @@ produce_handle::produce_handle()
 
 handle* produce_handle::produce_handle_pointer(string& tmp_str)
 {
-    if( tmp_str == "add")
+    if( tmp_str == "get")
     {
-        handle* p_handle = new add_handle();
-        return p_handle;
+        handle* p_handle = new get_handle();
     }
     else if( tmp_str == "jscon_parse")
     {
         handle* p_handle = new jscon_parse_handle();
     }
+    else if( tmp_str == "filter")
+    {
+        handle* p_handle = new filter_handle();
+    }
+    else if( tmp_str == "time")
+    {
+        handle* p_handle = new time_handle();
+    }
+    else if( tmp_str == "put")
+    {
+        handle* p_handle = new put_handle();
+    }
+    else if( tmp_str == "write_cache")
+    {
+        handle* p_handle = new write_cache_handle();
+    }
+    else if( tmp_str == "write_file")
+    {
+        handle* p_handle = new write_file_handle();
+    }
+    else if( tmp_str == "oracle_output")
+    {
+        handle* p_handle = new oracle_output_handle();
+    }
+    else
+    {
+        PrintForDebug("undefined config str cooured!\n");
+        return NULL;
+    }
+    return p_handle;
 }
