@@ -132,7 +132,7 @@ bool read_mysql::first_stemp_work()
         memset( sql_buf, 0, 1024);
         sprintf(sql_buf, "delete from SystemEvents where ID >= %d and ID <= %d ;", m_min_id, m_min_id + m_get_num_infact-1);
         sql = sql_buf;
-        //m_mysql->mysql_insert(sql);
+        m_mysql->mysql_insert(sql);
         return true;
     }
     return false;

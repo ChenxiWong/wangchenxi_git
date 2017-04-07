@@ -42,6 +42,9 @@ bool jscon_parse_handle::get_value_from_jscon_str(string& dst_str, string& src_s
 
 jscon_parse_handle::jscon_parse_handle()
 {
+    m_b_g = false;
+    m_b_f = false;
+    m_b_a = false;
 }
 
 bool jscon_parse_handle::handle_getopt()
@@ -116,6 +119,8 @@ bool jscon_parse_handle::run(log_message* p_msg)
 
 get_handle::get_handle()
 {
+    m_b_g = false;
+    m_b_t = false;
 }
 
 bool get_handle::handle_getopt()
@@ -171,6 +176,9 @@ bool get_handle::run(log_message* p_msg)
 
 filter_handle::filter_handle()
 {
+    m_b_f = false;
+    m_b_i = false;
+    m_b_e = false;
 }
 
 bool filter_handle::handle_getopt()
@@ -237,6 +245,8 @@ bool filter_handle::run(log_message* p_msg)
 
 put_handle::put_handle()
 {
+    m_b_a = false;
+    m_b_t = false;
 }
 
 bool put_handle::handle_getopt()
@@ -284,6 +294,9 @@ bool put_handle::run(log_message* p_msg)
 
 time_handle::time_handle()
 {
+    m_b_f = false;
+    m_b_a = false;
+    m_b_t = false;
 }
 
 bool time_handle::handle_getopt()
@@ -377,6 +390,11 @@ bool time_handle::run(log_message* p_msg)
 
 write_cache_handle::write_cache_handle()
 {
+    m_b_s = false;
+    m_b_v = false;
+    m_b_M = false;
+    m_b_d = false;
+    m_b_t = false;
 }
 
 bool write_cache_handle::handle_getopt()
@@ -484,6 +502,8 @@ bool write_cache_handle::run(log_message* p_msg)
 
 write_file_handle::write_file_handle()
 {
+    m_b_f = false;
+    m_b_o = false;
 }
 
 bool write_file_handle::handle_getopt()
@@ -522,6 +542,7 @@ bool write_file_handle::run(log_message* p_msg)
     if(m_b_f)
         if(!(get_value_from_map( m_tmp_str, m_str_f)))
         {
+            PrintForDebug(m_tmp_str.c_str());
             m_tmp_str.clear();
         }
     if(m_b_o && m_tmp_str.size() != 0)
@@ -537,6 +558,7 @@ bool write_file_handle::run(log_message* p_msg)
         fflush(fp);
         fclose(fp);
         m_tmp_str.clear();
+        m_p_map->clear();
         fp = NULL;
     }
     return true;
@@ -544,6 +566,11 @@ bool write_file_handle::run(log_message* p_msg)
 
 oracle_output_handle::oracle_output_handle()
 {
+    m_b_i = false;
+    m_b_u = false;
+    m_b_p = false;
+    m_b_b = false;
+    m_b_c = false;
 }
 
 bool oracle_output_handle::handle_getopt()
