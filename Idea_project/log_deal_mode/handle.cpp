@@ -18,6 +18,7 @@ handle::handle()
 {
     m_argv = NULL;
     m_p_c = NULL;
+    m_argc = 0;
 }
 handle::handle(const handle& p_handle)
 {
@@ -68,7 +69,7 @@ void handle::str2argv()
         }
         ++m_p_c;
     }
-    int m_argc = c_vec.size();
+    m_argc = c_vec.size();
     m_argv =(char**) new char*[m_argc];
     memset(m_argv, 0, m_argc * sizeof(char*));
     for(vector<char*>::size_type ix = 0; ix != c_vec.size(); ++ix)

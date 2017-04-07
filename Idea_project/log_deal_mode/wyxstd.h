@@ -14,6 +14,7 @@
 #include <cstdarg>
 
 //调试宏定义
+#define DEBUG
 
 #ifdef DEBUG
 #define PrintForDebug(code)  HereIsDebug(code, __FILE__, __LINE__, __func__, __DATE__, __TIME__)

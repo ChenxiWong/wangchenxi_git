@@ -135,7 +135,11 @@ class write_cache_handle:virtual public handle
     private:
     protected:
 
+        unsigned long long m_count;
+
         vector<string> m_vec;
+
+        string m_cache_str;
 
         bool m_b_v;
         string m_str_v;
@@ -146,6 +150,14 @@ class write_cache_handle:virtual public handle
 
         bool m_b_d;
         string m_str_d;
+
+        bool m_b_t;
+        string m_str_t;
+
+        bool m_b_s;
+        string m_str_s;
+        int m_int_s;
+
     public:
         write_cache_handle();
         virtual ~write_cache_handle(){}
@@ -158,11 +170,8 @@ class write_file_handle:virtual public handle
     private:
     protected:
 
-        unsigned long long m_count;
-
-        bool m_b_s;
-        string m_str_s;
-        int m_int_s;
+        bool m_b_f;
+        string m_str_f;
 
         bool m_b_o;
         string m_str_o;

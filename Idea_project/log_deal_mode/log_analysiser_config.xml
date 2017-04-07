@@ -1,6 +1,6 @@
 <log_config>
     <mysql>
-        <space_time>1</space_time>
+        <space_time>10</space_time>
         <host>127.0.0.1</host>
         <port>3306</port>
         <db_name>Syslog</db_name>
@@ -10,8 +10,8 @@
         <plan_to_get_num_once>6553500</plan_to_get_num_once>
     </mysql>
     <table>
-        <handle argv="get -g m_message_str -t get_m_message_str ">get</handle>
-        <handle argv="filter -f get_m_message_str -i NPR_FlowState_Syslog">filter</handle>
+        <handle argv="wyxLogDeal -g m_message_str -t get_m_message_str ">get</handle>
+        <handle argv="wyxLogDeal -f get_m_message_str -i NPR_FlowState_Syslog">filter</handle>
         <handle argv="parse -f get_m_message_str -a NPR_FlowState_Syslog/ID  -t ID ">jscon_parse</handle>
         <handle argv="filter -f ID -e 0 ">filter</handle>
         <handle argv="parse -f get_m_message_str -a NPR_FlowState_Syslog/State_of_total_flow/data_size  -t data_size ">jscon_parse</handle>
@@ -21,8 +21,8 @@
         <handle argv="put -a all_ip -t ip ">put</handle>
         <handle argv="put -a all_port -t port ">put</handle>
         <handle argv="put -a all_direction -t direction ">put</handle>
-        <handle argv="write -v 6 -M time|ip|direction|port|packet_num|data_size| -d | ">write_cache</handle>
-        <handle argv="write -s 1 -o /dev/shm/State_of_total_flow.txt ">write_file</handle>
+        <handle argv="write -s 1 -v 6 -M time|ip|direction|port|packet_num|data_size| -d | -t cache ">write_cache</handle>
+        <handle argv="write -f cache -o /dev/shm/State_of_total_flow.txt ">write_file</handle>
         <handle argv="oracle -i /dev/shm/State_of_total_flow.txt -u test -p oracle -b orcl_db -c xxx.ctl ">oracle_output</handle>
     </table>
 </log_config>

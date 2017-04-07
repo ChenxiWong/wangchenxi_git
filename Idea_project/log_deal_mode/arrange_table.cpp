@@ -33,7 +33,18 @@ void arrange_table::set_m_p_msg_list(list<log_message*>* p_list)
 bool arrange_table::arrange(list<log_message*>* p_list)
 {
     set_m_p_msg_list(p_list);
-    //handle::run();
+    for(list<log_message*>::iterator list_it = m_p_msg_list->begin(); list_it != m_p_msg_list->end(); ++list_it)
+    {
+        for(vector<handle*>::iterator iter = m_vec.begin(); iter != m_vec.end(); ++iter)
+        {
+            if(!(*iter)->run(*list_it))
+            {
+                m_map.clear();
+                break;
+            }
+        }
+    }
+    return true;
 }
 
 bool arrange_table::init_arrange_table(xmlNodePtr node)
@@ -55,4 +66,5 @@ bool arrange_table::init_arrange_table(xmlNodePtr node)
             m_vec.push_back(p_handle);
         }
     }
+    return true;
 }

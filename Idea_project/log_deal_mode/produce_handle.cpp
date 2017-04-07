@@ -47,7 +47,8 @@ jscon_parse_handle::jscon_parse_handle()
 bool jscon_parse_handle::handle_getopt()
 {
     int ch;
-    opterr = 0;
+    int* p_optind = & optind;
+    *p_optind = 1;
     while ((ch = getopt( m_argc, m_argv, "f:t:a:"))!=-1)
     {
         switch(ch)
@@ -120,7 +121,8 @@ get_handle::get_handle()
 bool get_handle::handle_getopt()
 {
     int ch;
-    opterr = 0;
+    int* p_optind = & optind;
+    *p_optind = 1;
     while ((ch = getopt( m_argc, m_argv, "g:t:"))!=-1)
     {
         switch(ch)
@@ -174,7 +176,8 @@ filter_handle::filter_handle()
 bool filter_handle::handle_getopt()
 {
     int ch;
-    opterr = 0;
+    int* p_optind = & optind;
+    *p_optind = 1;
     while ((ch = getopt( m_argc, m_argv, "f:i:e:"))!=-1)
     {
         switch(ch)
@@ -217,20 +220,19 @@ bool filter_handle::run(log_message* p_msg)
             return false;
         }
     if(m_b_e)
-        if(m_tmp_str == m_str_e)
+        if(m_tmp_str != m_str_e)
         {
             m_tmp_str.clear();
-            return true;
+            return false;
         }
     string::size_type pos = string::npos;
     if(m_b_i)
-        if((pos = m_tmp_str.find(m_str_i)) != string::npos)
+        if((pos = m_tmp_str.find(m_str_i)) == string::npos)
         {
             m_tmp_str.clear();
-            return true;
+            return false;
         }
-    m_tmp_str.clear();
-    return false;
+    return true;
 }
 
 put_handle::put_handle()
@@ -240,7 +242,8 @@ put_handle::put_handle()
 bool put_handle::handle_getopt()
 {
     int ch;
-    opterr = 0;
+    int* p_optind = & optind;
+    *p_optind = 1;
     while ((ch = getopt( m_argc, m_argv, "a:t:"))!=-1)
     {
         switch(ch)
@@ -286,7 +289,8 @@ time_handle::time_handle()
 bool time_handle::handle_getopt()
 {
     int ch;
-    opterr = 0;
+    int* p_optind = & optind;
+    *p_optind = 1;
     while ((ch = getopt( m_argc, m_argv, "f:a:t:"))!=-1)
     {
         switch(ch)
@@ -378,8 +382,9 @@ write_cache_handle::write_cache_handle()
 bool write_cache_handle::handle_getopt()
 {
     int ch;
-    opterr = 0;
-    while ((ch = getopt( m_argc, m_argv, "v:M:d:"))!=-1)
+    int* p_optind = & optind;
+    *p_optind = 1;
+    while ((ch = getopt( m_argc, m_argv, "s:v:M:d:t:"))!=-1)
     {
         switch(ch)
         {
@@ -403,6 +408,19 @@ bool write_cache_handle::handle_getopt()
                     m_str_d = optarg;
                     break;
                 }
+            case 't':
+                {
+                    m_b_t = true;
+                    m_str_t = optarg;
+                    break;
+                }
+            case 's':
+                {
+                    m_b_s = true;
+                    m_str_s = optarg;
+                    m_int_s = atoi(m_str_s.c_str());
+                    break;
+                }
             default:
                 {
                     PrintForDebug("undefined optargs occured!\n");
@@ -417,7 +435,7 @@ bool write_cache_handle::handle_getopt()
         {
             string tmp_str(m_str_M, 0,pos);
             m_vec.push_back(tmp_str);
-            m_str_M.substr(pos+1);
+            m_str_M = m_str_M.substr(pos+1);
         }
     }
     return true;
@@ -439,6 +457,26 @@ bool write_cache_handle::run(log_message* p_msg)
             }
             return false;
         }
+        ++m_count;
+        if(((m_count % m_int_s)== 0) && m_b_t)
+        {
+            if(!(insert_kv_to_map( m_str_t, m_cache_str)))
+            {
+                PrintForDebug("insert value to map faile");
+                m_tmp_str.clear();
+                return false;
+            }
+            m_cache_str.clear();
+        }
+        else{
+            m_cache_str +="\n";
+            m_tmp_str.clear();
+            if(!(insert_kv_to_map( m_str_t, m_tmp_str)))
+            {
+                PrintForDebug("insert value to map faile");
+                return false;
+            }
+        }
         return true;
     }
     return false;
@@ -451,16 +489,16 @@ write_file_handle::write_file_handle()
 bool write_file_handle::handle_getopt()
 {
     int ch;
-    opterr = 0;
-    while ((ch = getopt( m_argc, m_argv, "s:o:"))!=-1)
+    int* p_optind = & optind;
+    *p_optind = 1;
+    while ((ch = getopt( m_argc, m_argv, "f:o:"))!=-1)
     {
         switch(ch)
         {
-            case 's':
+            case 'f':
                 {
-                    m_b_s = true;
-                    m_str_s = optarg;
-                    m_int_s = atoi(m_str_s.c_str());
+                    m_b_f = true;
+                    m_str_f = optarg;
                     break;
                 }
             case 'o':
@@ -481,24 +519,24 @@ bool write_file_handle::handle_getopt()
 
 bool write_file_handle::run(log_message* p_msg)
 {
-    ++m_count;
-    if(m_b_s && m_b_o)
-    {
-        if((m_count % m_int_s) != 0)
+    if(m_b_f)
+        if(!(get_value_from_map( m_tmp_str, m_str_f)))
         {
-            m_cache_str +="\n";
-            return true;
+            m_tmp_str.clear();
         }
+    if(m_b_o && m_tmp_str.size() != 0)
+    {
         FILE* fp = fopen(m_str_o.c_str(), "w+");
         if(fp == NULL)
         {
             PrintForDebug(m_str_o.c_str());
             return false;
         }
-        fwrite( m_cache_str.c_str(), m_cache_str.length(), 1, fp);
-        DebugPrintf("%s\n", m_cache_str.c_str());
+        fwrite( m_tmp_str.c_str(), m_tmp_str.length(), 1, fp);
+        PrintForDebug(m_tmp_str.c_str());
         fflush(fp);
         fclose(fp);
+        m_tmp_str.clear();
         fp = NULL;
     }
     return true;
@@ -511,7 +549,8 @@ oracle_output_handle::oracle_output_handle()
 bool oracle_output_handle::handle_getopt()
 {
     int ch;
-    opterr = 0;
+    int* p_optind = & optind;
+    *p_optind = 1;
     while ((ch = getopt( m_argc, m_argv, "i:u:p:b:c:"))!=-1)
     {
         switch(ch)
@@ -563,7 +602,7 @@ bool oracle_output_handle::run(log_message* p_msg)
         char buffer[300];
         memset(buffer, 0, 300);
         sprintf(buffer, "sqlldr %s/%s@%s control=%s.ctl bad=%s.bad", m_str_u.c_str(), m_str_p.c_str(), m_str_b.c_str(), m_str_c.c_str(), m_str_c.c_str());
-        system(buffer);
+        //system(buffer);
     }
     return true;
 }
@@ -577,35 +616,35 @@ handle* produce_handle::produce_handle_pointer(string& tmp_str)
     handle* p_handle = NULL;
     if( tmp_str == "get")
     {
-         p_handle = new get_handle();
+        p_handle = new get_handle();
     }
     else if( tmp_str == "jscon_parse")
     {
-         p_handle = new jscon_parse_handle();
+        p_handle = new jscon_parse_handle();
     }
     else if( tmp_str == "filter")
     {
-         p_handle = new filter_handle();
+        p_handle = new filter_handle();
     }
     else if( tmp_str == "time")
     {
-         p_handle = new time_handle();
+        p_handle = new time_handle();
     }
     else if( tmp_str == "put")
     {
-         p_handle = new put_handle();
+        p_handle = new put_handle();
     }
     else if( tmp_str == "write_cache")
     {
-         p_handle = new write_cache_handle();
+        p_handle = new write_cache_handle();
     }
     else if( tmp_str == "write_file")
     {
-         p_handle = new write_file_handle();
+        p_handle = new write_file_handle();
     }
     else if( tmp_str == "oracle_output")
     {
-         p_handle = new oracle_output_handle();
+        p_handle = new oracle_output_handle();
     }
     else
     {

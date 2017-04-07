@@ -33,8 +33,6 @@ class handle
 
         string m_tmp_str;
 
-        string m_cache_str;
-
         log_message* p_log_message;
         bool get_value_from_map(string&, string&);
         bool insert_kv_to_map(string&, string&);

@@ -70,6 +70,14 @@ bool log_analysiser::one_arrange_table(list<log_message*>* p_list, arrange_table
     ++m_thread_num;
     p_arrange->arrange(p_list);
     --m_thread_num;
+    if(m_thread_num == 0)
+    {
+        for(list<log_message*>::iterator iter = p_list->begin(); iter != p_list->end(); ++iter)
+        {
+            delete *(iter);
+            *(iter) = NULL;
+        }
+    }
 }
 
 void* log_analysiser::analysis()
