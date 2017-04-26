@@ -30,9 +30,12 @@ int main()
     hash_map<string, int> hm;
     hm["hello"] = 100 + hm["hello"];
     std::cout<<hm["hello"]<<std::endl;
+    for(hash_map<string, int>::iterator iter = hm.begin();
+            iter != hm.end(); ++iter)
+    {
+        iter += 100;
+    }
 
-    hash_map<string, pair<unsigned long long , time_t>> hm1;
-    hm1["hello"]
     /* 其它使用hash_map的代码 */
 
 }
