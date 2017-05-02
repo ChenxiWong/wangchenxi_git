@@ -10,9 +10,16 @@
 #include<string>
 #include<iostream>
 #include<time.h>
+#include <unistd.h>
+#include <string.h>
+#include <stdio.h>
+#include <map>
 using namespace __gnu_cxx;
 using std::string;
 using std::pair;
+using std::cout;
+using std::endl;
+using std::map;
 namespace __gnu_cxx
 {
     template<> struct hash<string>
@@ -23,19 +30,37 @@ namespace __gnu_cxx
         }
     };
 }
+#define MAP hash_map
 
 int main()
 {
-
-    hash_map<string, int> hm;
-    hm["hello"] = 100 + hm["hello"];
-    std::cout<<hm["hello"]<<std::endl;
-    for(hash_map<string, int>::iterator iter = hm.begin();
-            iter != hm.end(); ++iter)
+    char arry[60];
+    long n=0;
+    clock_t start,finish;
+    MAP<int, int> hh;
+    vector<string> vec;
+    vec.reserve(100000000);
+    unsigned long long  i = 0;
+    for(;i != 100000000; ++i)
     {
-        iter += 100;
+        memset(arry, 0, 60);
+        sprintf(arry,"%lld%lld%lld%lld", i,i,i,i);
+        vec.push_back(string(arry));
     }
 
-    /* 其它使用hash_map的代码 */
+    start=clock();
+    MAP<string, unsigned long long> hm;
+    for(vector<string>::iterator iter = vec.begin(); iter != vec.end(); ++iter)
+    {
+        hm[*iter] = i;
+    }
+    finish=clock();
+    cout<<(finish-start)/CLOCKS_PER_SEC<<endl;
+    cout<<(finish-start)<<endl;
+    cout<<hm["123123123123"]<<endl;
+
+
+
+    /* 其它使用MAP的代码 */
 
 }
