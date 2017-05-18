@@ -6,8 +6,8 @@
  * @version 0.1.00
  * @date 2017-05-11
  */
-/* isblank example */
 namespace stdc{
+/* isblank example */
 #include <stdio.h>
 #include <ctype.h>
     int stdc_main1 ()
