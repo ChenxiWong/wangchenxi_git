@@ -22,7 +22,12 @@
         printf(#a "=%-7d ," #b "=%-7f .\n", a, b); \
     }while(0)
 
-
+#define prosess(a, ...) \
+    do \
+    { \
+        init_ ##a (); \
+        printf(__VA_ARGS__); \
+    }while(0)
 
 
 int i = 100;
@@ -44,4 +49,5 @@ int main(int argc, char* argv)
     test(i);
     test(f);
     print(i,f);
+    prosess(i, "hello, world.\n i = %d \n", i);
 }
