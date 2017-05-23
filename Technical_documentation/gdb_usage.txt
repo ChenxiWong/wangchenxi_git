@@ -1,0 +1,109 @@
+以下命令权当记录，用到时翻一翻
+1. gdb脚本
+gdb -x file   从指定的文件中读取命令
+
+常用的gdb操作，比如打断点等可以放在一个gdb脚本里，然后使用时导入即可。例如:
+
+
+b main.cpp:15
+
+b test.cpp:18
+
+
+
+gdb运行时，使用source命令即可导入
+
+
+
+(gdb) source /path/to/breakpoints.txt
+
+
+
+或gdb运行时导入
+
+
+
+gdb -x /path/to/breakpoints.txt prog
+
+
+
+对于每次gdb运行都要调用的脚本，比如设置字符集等，可以放在~/.gdbinit初始文件里，这样每次gdb启动时都会自动调用。
+
+
+
+2. 给断点设定运行命令
+commands [bnum]
+... command-list ...
+end
+为断点号bnum指写一个命令列表。当程序被该断点停住时，gdb会依次运行命令列表中的命令。
+
+例如：
+
+break foo if x>0
+commands
+printf "x is %d/n",x
+continue
+end
+断点设置在函数foo中，断点条件是x>0，如果程序被断住后，也就是，一旦x的值在foo函数中大于0，GDB会自动打印出x的值，并继续运行程序。
+
+3.打印变量
+print /F expr
+
+x 16进制格式
+d 十进制格式
+u 无符号整数
+o 八进制格式
+t 二进制格式
+a 用十六进制格式打印地址
+c 字符格式
+f 浮点格式
+4. 打印内存
+x /NFU addr
+N 表示要查看的长度
+F 表示输出的格式，如上
+U 表示单位，如下
+    b 字节
+h 半字(两个字节)
+w 字，四个字节
+g 双字，八个字节
+5. 多线程
+info threads 可以查看所有的线程及其ID
+thread 2 切换线程
+
+break <linespec> thread <threadno> if ... 指定线程ID下断点
+例如：
+(gdb) break frik.c:13 thread 28 if bartab > lim
+当运行到断点时，有时分别需要下面两种场景：
+一是，当某个线程运行到断点处，程序所有线程都停止运行
+不做特殊设置就是这种。进而可以进行下面的设置
+(gdb)set scheduler-locking off|on
+off：执行continue或单步时所有线程都运行
+on：只有当前被调试的线程执行
+二是，当某个线程运行到断点处，其他线程正常运行
+创建或修改~/.gdbinit文件，增加下面的内容，打开non-stop模式
+set target-async 1
+set pagination off
+set non-stop on
+6.栈信息
+bt 打印当前栈
+info args 打印当前函数的参数名及其值
+info locals 打印出当前函数中所有局部变量及其值
+
+up [n] 向栈的上面移动n层
+down [n] 向栈的下面移动n层
+frame 会打印出这些信息：栈的层编号，当前的函数名，函数参数值，函数所在文件及行号，函数执行到的语句。
+7. 自动显示
+display <expr> 
+display/<fmt> <expr> 
+display/<fmt> <addr>
+当程序一停下来，就自动显示内存或变量的值
+display/i $pc   i表示反汇编输出，另外还有s是字符串输出
+info display
+取消显示
+disable display [dnum]
+delete display [dnum]
+
+8. 查看寄存器
+info registers
+info all-registers
+info registers <regname ...>
