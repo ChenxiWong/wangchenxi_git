@@ -1,0 +1,67 @@
+Oracle12c 相关
+
+
+# 查看cdb 中的 pdb数据库相关
+select con_id, dbid, guid, name , open_mode from v$pdbs;
+
+# 修改sys、system用户相关的认证密码
+alter user sys identified by Oracle12c;
+alter user system identified by Oracle12c;
+
+alter session set container=orclpdb;
+alter session set container=PDB$SEED;
+
+# 开启服务
+startup
+
+# 开启监听服务
+lsnrctl start
+
+conn sys@orcl/Oracle12c as sysdba;
+
+# 查看数据库是否为CDB
+select name, decode(cdb, 'YES', 'Multitenant Option enabled', 'Regular 12c Database: ') "Multitenant Option" , open_mode, con_id from v$database;
+
+clear screen
+
+# 查看当前容器
+select sys_context('userenv', 'con_name') "Container DB" from dual;
+
+# 查看CDB容器中的PDBS信息
+select con_id, dbid, guid, name , open_mode from v$pdbs;
+
+# 启动PDB数据库
+alter pluggable database PDBEPPS open;
+
+# 启动PDB数据库 
+alter session set container=PDBEPPS;
+startup;
+
+# 关闭PDB数据库
+alter pluggable database PDBEPPS close;
+
+# 在容器间切换
+alter session set container=PDBEPPS;
+alter session set container=CDB$ROOT;
+
+
+
+oracle管理相关
+
+
+select username, account_status from dba_users;
+
+ALTER USER scott ACCOUNT UNLOCK;
+"account cannot be unlocked in a PDB while it is locked in the root"
+
+alter user scott identified by tigger;
+
+select username, account_status from dba_users where username='SCOTT';
+
+
+
+
+
+
+
+
